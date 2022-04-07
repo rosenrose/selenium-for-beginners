@@ -36,7 +36,7 @@ class GoogleKeywordScreenshooter:
           console.log(arguments)
           arguments[0].remove();
         """, related_questions)
-      except:
+      except Exception:
         pass
 
       search_results = self.driver.find_elements(By.CSS_SELECTOR, "#search h1 + div > *")
@@ -47,7 +47,7 @@ class GoogleKeywordScreenshooter:
         #   print(title.text)
         try:
           result.screenshot(str(self.screenshots_dir / f"{self.keyword}_page{current_page}_{i + 1:02}.png"))
-        except:
+        except Exception:
           pass
       
       pagination = self.driver.find_element(By.CSS_SELECTOR, "div[role='navigation'] table")
