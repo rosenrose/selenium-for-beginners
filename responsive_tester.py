@@ -32,7 +32,7 @@ class ResponsiveTester:
       for section in range(total_sections):
         self.driver.execute_script(f"""window.scrollTo(0, {section * BROWSER_HEIGHT});""")
         time.sleep(0.5)
-        self.driver.save_screenshot(str(urlFolder / f"{width}_{section + 1}.png"))
+        self.driver.save_screenshot(str(urlFolder / f"{width}_{section + 1:02}.png"))
 
   def start(self):
     self.prepare()
