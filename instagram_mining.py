@@ -20,6 +20,8 @@ def extract_data():
 
   if hashtag_name not in collected_hashtags:
     collected_hashtags[hashtag_name] = post_count
+  print(collected_hashtags)
+  time.sleep(10)
   return hashtag_name
 
 def get_related(target_hashtag = None):
@@ -29,6 +31,7 @@ def get_related(target_hashtag = None):
     driver.switch_to.window(driver.window_handles[0])
 
   try:
+    extract_data()
     popular = wait_for(10, EC.presence_of_element_located, (By.XPATH, "//div[contains(text(), '인기 게시물')]/../following-sibling::div"))
     # recent = driver.find_element(By.XPATH, "//h2[contains(text(), '최근 사진')]/following-sibling::div")
     popular_posts = [i.get_attribute("href") for i in popular.find_elements(By.CSS_SELECTOR, "a")]
@@ -51,7 +54,6 @@ def get_related(target_hashtag = None):
       driver.switch_to.window(window)
       try:
         extract_data()
-        time.sleep(10)
       except Exception:
         pass
       if len(collected_hashtags) >= max_hashtags:
