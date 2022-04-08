@@ -1,4 +1,5 @@
 import time
+import re
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -21,7 +22,9 @@ class ResponsiveTester:
   def take_screenshot(self, url):
     self.driver.get(url)
     BROWSER_HEIGHT = self.driver.get_window_size()["height"]
-    urlName = url.removeprefix("https://").removeprefix("http://").removesuffix("/").replace("/", "_").strip()
+    urlName = url.removeprefix("https://").removeprefix("http://").removesuffix("/").strip()
+    urlName = re.sub(r"[\\/:*?\"<>|]", "_", urlName)
+
     (urlFolder := self.screenshots / urlName).mkdir(exist_ok=True)
     for png in urlFolder.iterdir():
       png.unlink()
