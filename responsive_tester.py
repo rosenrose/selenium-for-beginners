@@ -23,6 +23,8 @@ class ResponsiveTester:
     BROWSER_HEIGHT = self.driver.get_window_size()["height"]
     urlName = url.removeprefix("https://").removeprefix("http://").removesuffix("/").replace("/", "_").strip()
     (urlFolder := self.screenshots / urlName).mkdir(exist_ok=True)
+    for png in urlFolder.iterdir():
+      png.unlink()
 
     for width in self.widths:
       self.driver.set_window_size(width=width, height=BROWSER_HEIGHT)
