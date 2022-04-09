@@ -12,6 +12,7 @@ class GoogleKeywordScreenshooter:
         self.keyword = keyword
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        self.options.add_argument("--headless")
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.options)
         self.screenshots_dir = Path(screenshots_dir)
         self.max_pages = max_pages
@@ -23,6 +24,8 @@ class GoogleKeywordScreenshooter:
 
     def start(self):
         self.prepare()
+        print(f"Scrapping {self.keyword}")
+
         self.driver.get("https://google.com")
         search_bar = self.driver.find_element(By.CSS_SELECTOR, "input[type='text']")
         search_bar.send_keys(self.keyword)
@@ -30,6 +33,7 @@ class GoogleKeywordScreenshooter:
         current_page = 1
 
         while current_page <= self.max_pages:
+            print(f"page {current_page}")
             try:
                 related_questions = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), '관련 질문')]/../../../../..")))
                 self.driver.execute_script("""

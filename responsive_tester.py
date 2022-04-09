@@ -42,6 +42,7 @@ class ResponsiveTester:
     def start(self):
         self.prepare()
         for url in self.urls:
+            print(f"Testing {url}")
             self.take_screenshot(url);
         self.finish()
 
