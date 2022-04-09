@@ -71,7 +71,7 @@ class InstagramMiner:
 
         if hashtag_name not in self.collected_hashtags:
             self.collected_hashtags[hashtag_name] = post_count
-        print(f"Collected {hashtag_name}: {post_count}")
+            print(f"Collected {hashtag_name}: {post_count}")
         time.sleep(self.interval)
         return hashtag_name
 
@@ -94,12 +94,15 @@ class InstagramMiner:
             # driver.execute_script(f"""window.open("{post.get_attribute("href")}", "_blank");""")
             self.driver.get(post)
             time.sleep(self.interval)
-            related_hashtags = [i for i in self.driver.find_elements(By.CSS_SELECTOR, "a") if "explore/tags/" in i.get_attribute("href") and i.text.startswith("#")]
+            related_hashtags = [i for i in self.driver.find_elements(By.CSS_SELECTOR, "a")
+                if "explore/tags/" in i.get_attribute("href") and
+                i.text.startswith("#") and
+                i.text.removeprefix("#") not in self.collected_hashtags]
             # print(*[(i.get_attribute("href"), i.text) for i in related_hashtags], sep="\n")
 
-            for i in range(min(len(related_hashtags), self.max_hashtags)):
+            for i in range(min(len(related_hashtags), self.max_hashtags - len(self.collected_hashtags))):
                 if related_hashtags[i].text.removeprefix("#") in self.collected_hashtags:
-                    continue
+                    continue # 해시태그 중복으로 올리는 경우가 있음
                 ActionChains(self.driver).key_down(Keys.CONTROL).click(related_hashtags[i]).key_up(Keys.CONTROL).perform()
                 time.sleep(self.interval)
 
