@@ -1,5 +1,6 @@
 import time
 import json
+import csv
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.service import Service
@@ -47,6 +48,8 @@ def get_related(target_hashtag=None):
         # print(*[(i.get_attribute("href"), i.text) for i in related_hashtags], sep="\n")
 
         for i in range(min(len(related_hashtags), max_hashtags)):
+            if related_hashtags[i].text.removeprefix("#") in collected_hashtags:
+                continue
             ActionChains(driver).key_down(Keys.CONTROL).click(related_hashtags[i]).key_up(Keys.CONTROL).perform()
             time.sleep(10)
 
@@ -90,11 +93,19 @@ except Exception:
     pass
 
 initial_hashtag = "dog"
-max_hashtags = 10
+max_hashtags = 15
 collected_hashtags = {}
 
 get_related(initial_hashtag)
 print(collected_hashtags)
+
+with open(f"{initial_hashtag}-report.csv", "w", encoding="utf-8") as file:
+    writer = csv.writer(file)
+    writer.writerow(["Hashtag", "Post Count"])
+    for collected in collected_hashtags.items():
+        writer.writerow(collected)
+
+json.dump(collected_hashtags, open(f"{initial_hashtag}-report.json", "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 
 # input()
 driver.quit()
