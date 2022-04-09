@@ -20,7 +20,7 @@ def extract_data():
 
     if hashtag_name not in collected_hashtags:
         collected_hashtags[hashtag_name] = post_count
-    print(collected_hashtags)
+    # print(collected_hashtags)
     time.sleep(10)
     return hashtag_name
 
@@ -46,8 +46,8 @@ def get_related(target_hashtag=None):
         related_hashtags = [i for i in driver.find_elements(By.CSS_SELECTOR, "a") if "explore/tags/" in i.get_attribute("href") and i.text.startswith("#")]
         # print(*[(i.get_attribute("href"), i.text) for i in related_hashtags], sep="\n")
 
-        for hashtag in related_hashtags:
-            ActionChains(driver).key_down(Keys.CONTROL).click(hashtag).key_up(Keys.CONTROL).perform()
+        for i in range(min(len(related_hashtags), max_hashtags)):
+            ActionChains(driver).key_down(Keys.CONTROL).click(related_hashtags[i]).key_up(Keys.CONTROL).perform()
             time.sleep(10)
 
         for window in driver.window_handles[1:]:
@@ -90,7 +90,7 @@ except Exception:
     pass
 
 initial_hashtag = "dog"
-max_hashtags = 20
+max_hashtags = 10
 collected_hashtags = {}
 
 get_related(initial_hashtag)
