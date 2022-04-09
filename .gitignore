@@ -1,3 +1,4 @@
 *.png
-instagram_account.txt
-instagram_cookie.json
+*.txt
+*.json
+*.csv
